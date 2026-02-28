@@ -30,10 +30,15 @@ export const updateUser = async (id: string, data: Partial<NewUser>) => {
 };
 
 export const upsertUser = async (data: NewUser) => {
-    const existingUser = await getUserById(data.id);
-    if (existingUser) return updateUser(data.id, data);
-
-    return createUser(data);
+    const [user] = await db
+        .insert(users)
+        .values(data)
+        .onConflictDoUpdate({
+            target: users.id,
+            set: data,
+        })
+        .returning();
+    return user;
 };
 
 // Product queries
@@ -50,7 +55,7 @@ export const getProductById = async (id: string) => {
             user: true,
             comments: {
                 with: { user: true },
-                orderBy: (comnents, { desc }) => [desc(comments.createdAt)],
+                orderBy: (comments, { desc }) => [desc(comments.createdAt)],
             },
         },
     });
