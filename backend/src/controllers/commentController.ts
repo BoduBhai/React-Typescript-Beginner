@@ -8,7 +8,7 @@ export const createComment = async (req: Request, res: Response) => {
         const { userId } = getAuth(req);
         if (!userId) return res.status(401).json({ error: "Unauthorised" });
 
-        const productId = req.params.id as string;
+        const productId = req.params.productId as string;
         const { content } = req.body;
 
         if (!content) {
@@ -28,8 +28,8 @@ export const createComment = async (req: Request, res: Response) => {
 
         res.status(201).json(comment);
     } catch (error) {
-        console.log("Errong creating comment", error);
-        res.status(500).json({ error: "Failled to create comment" });
+        console.log("Error creating comment", error);
+        res.status(500).json({ error: "Failed to create comment" });
     }
 };
 
@@ -38,7 +38,7 @@ export const deleteComment = async (req: Request, res: Response) => {
         const { userId } = getAuth(req);
         if (!userId) return res.status(401).json({ error: "Unauthorised" });
 
-        const commentId = req.params.id as string;
+        const commentId = req.params.commentId as string;
 
         const existingComment = await queries.getCommentById(commentId);
         if (!existingComment)
@@ -56,7 +56,7 @@ export const deleteComment = async (req: Request, res: Response) => {
 
         res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {
-        console.log("Errong deleting comment", error);
-        res.status(500).json({ error: "Failled to delete comment" });
+        console.log("Error deleting comment", error);
+        res.status(500).json({ error: "Failed to delete comment" });
     }
 };

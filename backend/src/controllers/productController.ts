@@ -89,7 +89,7 @@ export const updateProduct = async (req: Request, res: Response) => {
             return;
         }
 
-        const product = queries.updateProduct(id, {
+        const product = await queries.updateProduct(id, {
             title,
             description,
             imageUrl,
@@ -122,7 +122,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
         }
 
         await queries.deleteProduct(id);
-        res.status(204).json({ message: "Product deleted successfully" });
+        res.sendStatus(204);
     } catch (error) {
         console.log("Errong deleting product", error);
         res.status(500).json({ error: "Failled to delete product" });
