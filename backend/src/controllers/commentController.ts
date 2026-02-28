@@ -11,8 +11,11 @@ export const createComment = async (req: Request, res: Response) => {
         const productId = req.params.productId as string;
         const { content } = req.body;
 
-        if (!content) {
-            res.status(400).json({ error: "Missing required fields" });
+        const normalized = (
+            typeof content === "string" ? content : String(content)
+        ).trim();
+        if (normalized.length === 0) {
+            res.status(400).json({ error: "Invalid comment content" });
             return;
         }
 
@@ -21,7 +24,7 @@ export const createComment = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Product not found" });
 
         const comment = await queries.createComment({
-            content,
+            content: normalized,
             productId,
             userId,
         });
